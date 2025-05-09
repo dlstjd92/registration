@@ -39,6 +39,8 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+
 }
 
 tasks.withType<Test> {
