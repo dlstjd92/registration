@@ -3,6 +3,9 @@ package com.inspark.courseregistrationmodule.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(
         name = "students",
@@ -27,5 +30,8 @@ public class Student {
     @Column(nullable = false, unique = true)
     private String email; // 이메일
 
-    private String profileImageUrl; //프로필 이미지 <- 기본이미지 사용
+    private String profileImageUrl; //프로필 이미지
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 }
