@@ -33,20 +33,6 @@
 - 검색 기능은 필요 없으므로 N:M 구조 대신 컬렉션을 사용  
 - 자기소개(`aboutMe`)는 `@Lob`을 통해 대용량 텍스트로 저장  
 
-### RecommendationReason
-
-- 추천 메시지는 운영자가 관리할 수 있도록 별도의 엔티티 테이블로 분리  
-- 튜터는 하나의 추천 메시지를 N:1 관계로 참조  
-- 추천 여부는 `recommendation != null`으로 판단  
-
-### Reservation
-
-- 학생과 튜터 간의 수업 예약 정보를 저장하는 도메인  
-- `tutor_id + date + time_block_id` 조합에 유니크 제약을 설정하여 중복 예약을 방지  
-- 예약은 `ReservationStatus` enum을 통해 상태값(RESERVED, CANCELED, COMPLETED)으로 관리  
-- 예약을 삭제하지 않고 상태를 변경하여 이력을 보존  
-- `@ManyToOne` 관계로 Tutor, Student, TimeBlock 엔티티와 연결  
-
 ### Student
 
 - 수업을 예약하는 학생 정보를 저장하는 도메인  
@@ -59,12 +45,6 @@
 - 튜터가 가능한 시간대를 요일 및 30분 단위 시간 슬롯(TimeBlock)으로 설정하는 도메인  
 - `day_of_week + time_block_id + tutor_id` 복합 인덱스를 사용하여 예약 가능 시간 조회 시 성능 최적화  
 - 튜터 기준으로 조회하는 용도의 인덱스도 추가  
-
-### TimeBlock
-
-- 하루를 30분 단위로 나눈 시간 슬롯을 정의하는 도메인  
-- 총 48개의 시간 슬롯이 존재하며, 각 슬롯은 `startTime`, `endTime`, `label` 값을 가짐  
-- 튜터의 가능 시간대 설정 및 예약 시간과의 매핑 기준으로 사용  
 
 ---
 
