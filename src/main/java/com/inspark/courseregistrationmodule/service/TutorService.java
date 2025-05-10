@@ -25,7 +25,7 @@ public class TutorService {
     public void addTutor(Tutor tutor) {
         // 인수가 null 혹은 tutor의 이메일이 비어있으면
         if (tutor == null || tutor.getEmail() == null)
-            throw new IllegalArgumentException("Tutor cannot be null");
+            throw new RuntimeException("Tutor cannot be null");
 
         // 이미 존재하는 튜터인지 확인 (이메일 기준)
         boolean exists = tutorRepository.existsByEmail(tutor.getEmail());
@@ -38,7 +38,7 @@ public class TutorService {
     @Transactional
     public void addAvailableTimes(TutorAvailableTimeDto tutorAvailableTimeDto) {
         if (tutorAvailableTimeDto == null)
-            throw new IllegalArgumentException("availableTutorDto cannot be null");
+            throw new RuntimeException("availableTutorDto cannot be null");
 
         List<ZonedDateTime> times = tutorAvailableTimeDto.times();
         Long tutorId = tutorAvailableTimeDto.tutorId();
@@ -60,7 +60,7 @@ public class TutorService {
     @Transactional
     public void removeAvailableTimes(TutorAvailableTimeDto tutorAvailableTimeDto) {
         if (tutorAvailableTimeDto == null)
-            throw new IllegalArgumentException("availableTutorDto cannot be null");
+            throw new RuntimeException("availableTutorDto cannot be null");
 
         List<ZonedDateTime> times = tutorAvailableTimeDto.times();
         Long tutorId = tutorAvailableTimeDto.tutorId();

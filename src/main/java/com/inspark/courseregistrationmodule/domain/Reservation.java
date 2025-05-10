@@ -34,6 +34,4 @@ public class Reservation {
 
     private ZonedDateTime startDate;
 
-    private ZonedDateTime endDate;
-
 }

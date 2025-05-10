@@ -31,7 +31,7 @@ public class TutorAvailableTime {
     @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor; // 튜터
 
-    // 시간 time zone
+    // 시간 time zone 30분 단위로 기록될 것.
     private ZonedDateTime availableTime; // UTC 시간
 
 }
