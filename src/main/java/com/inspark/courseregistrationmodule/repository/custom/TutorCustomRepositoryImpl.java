@@ -1,12 +1,10 @@
 package com.inspark.courseregistrationmodule.repository.custom;
 
-//import com.inspark.courseregistrationmodule.dto.AvailableTutorDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-//import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -22,8 +20,7 @@ public class TutorCustomRepositoryImpl implements TutorCustomRepository {
         String sql = """
             SELECT tat.tutor_id
             FROM tutor_available_times tat
-            WHERE tat.day_of_week = :dayOfWeek
-              AND tat.time_block_id IN :timeBlockIds
+            WHERE tat.time_block_id IN :timeBlockIds
             GROUP BY tat.tutor_id
             HAVING COUNT(*) = :requiredBlockCount
               AND tat.tutor_id NOT IN (
@@ -35,7 +32,7 @@ public class TutorCustomRepositoryImpl implements TutorCustomRepository {
         """;
 
         return em.createNativeQuery(sql)
-                .setParameter("dayOfWeek", date.getDayOfWeek().name()) // 1=Monday
+//                .setParameter("dayOfWeek", date.getDayOfWeek().name()) // 1=Monday
                 .setParameter("timeBlockIds", timeBlockIds)
                 .setParameter("requiredBlockCount", timeBlockIds.size())
                 .setParameter("date", date)
@@ -51,21 +48,20 @@ public class TutorCustomRepositoryImpl implements TutorCustomRepository {
 
             // 가능한 블록
             String sql1 = """
-            SELECT tat.time_block_id
-            FROM tutor_available_times tat
-            WHERE tat.day_of_week = :dayOfWeek
-              AND NOT EXISTS (
-                  SELECT 1
-                  FROM reservations r
-                  WHERE r.date = :date
-                    AND r.time_block_id = tat.time_block_id
-                    AND r.tutor_id = tat.tutor_id
-              )
-            GROUP BY tat.time_block_id
-        """;
+                SELECT tat.time_block_id
+                FROM tutor_available_times tat
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM reservations r
+                    WHERE r.date = :date
+                      AND r.time_block_id = tat.time_block_id
+                      AND r.tutor_id = tat.tutor_id
+                )
+                GROUP BY tat.time_block_id
+            """;
 
             List<Number> blocks = em.createNativeQuery(sql1)
-                    .setParameter("dayOfWeek", dayOfWeek)
+//                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("date", date)
                     .getResultList();
 
@@ -92,7 +88,6 @@ public class TutorCustomRepositoryImpl implements TutorCustomRepository {
                     }
                 }
             }
-
             result.put(date, validBlocks);
         }
 

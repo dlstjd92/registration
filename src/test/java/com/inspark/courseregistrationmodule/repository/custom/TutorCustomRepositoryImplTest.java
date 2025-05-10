@@ -53,13 +53,13 @@ class TutorCustomRepositoryImplTest {
 
         TutorAvailableTime tat1 = TutorAvailableTime.builder()
                 .tutor(tutor)
-                .dayOfWeek(DayOfWeek.FRIDAY)
+//                .dayOfWeek(DayOfWeek.FRIDAY)
                 .timeBlock(block1)
                 .build();
 
         TutorAvailableTime tat2 = TutorAvailableTime.builder()
                 .tutor(tutor)
-                .dayOfWeek(DayOfWeek.FRIDAY)
+//                .dayOfWeek(DayOfWeek.FRIDAY)
                 .timeBlock(block2)
                 .build();
 
@@ -68,7 +68,7 @@ class TutorCustomRepositoryImplTest {
 
         LocalDate date = LocalDate.of(2025, 5, 9); // 금요일
 
-        List<?> list = em.createNativeQuery("SELECT day_of_week FROM tutor_available_times").getResultList();
+//        List<?> list = em.createNativeQuery("SELECT day_of_week FROM tutor_available_times").getResultList();
 
         // when
         Map<LocalDate, List<Long>> result = customRepository.findAvailableTimeBlocks(date, date, 2);
@@ -124,10 +124,10 @@ class TutorCustomRepositoryImplTest {
 
         DayOfWeek testDay = LocalDate.of(2025, 5, 12).getDayOfWeek();
 
-        em.persist(TutorAvailableTime.builder().tutor(tutor1).dayOfWeek(testDay).timeBlock(block1).build());
-        em.persist(TutorAvailableTime.builder().tutor(tutor1).dayOfWeek(testDay).timeBlock(block2).build());
-        em.persist(TutorAvailableTime.builder().tutor(tutor2).dayOfWeek(testDay).timeBlock(block1).build());
-        em.persist(TutorAvailableTime.builder().tutor(tutor2).dayOfWeek(testDay).timeBlock(block2).build());
+        em.persist(TutorAvailableTime.builder().tutor(tutor1).timeBlock(block1).build());
+        em.persist(TutorAvailableTime.builder().tutor(tutor1).timeBlock(block2).build());
+        em.persist(TutorAvailableTime.builder().tutor(tutor2).timeBlock(block1).build());
+        em.persist(TutorAvailableTime.builder().tutor(tutor2).timeBlock(block2).build());
 
         Reservation reservation = Reservation.builder()
                 .tutor(tutor2)

@@ -43,7 +43,7 @@ public class TutorAvailableTimeRepositoryTest {
 
         TutorAvailableTime tat = TutorAvailableTime.builder()
                 .tutor(tutor)
-                .dayOfWeek(DayOfWeek.MONDAY)
+//                .dayOfWeek(DayOfWeek.MONDAY)
                 .timeBlock(block)
                 .build();
         em.persist(tat);
@@ -51,7 +51,7 @@ public class TutorAvailableTimeRepositoryTest {
         List<TutorAvailableTime> result = repository.findByTutorId(tutor.getId());
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getDayOfWeek()).isEqualTo(DayOfWeek.MONDAY);
+//        assertThat(result.get(0).getDayOfWeek()).isEqualTo(DayOfWeek.MONDAY);
         assertThat(result.get(0).getTimeBlock().getLabel()).isEqualTo("09:00");
     }
 
@@ -69,12 +69,12 @@ public class TutorAvailableTimeRepositoryTest {
 
         TutorAvailableTime tat = TutorAvailableTime.builder()
                 .tutor(tutor)
-                .dayOfWeek(DayOfWeek.FRIDAY)
+//                .dayOfWeek(DayOfWeek.FRIDAY)
                 .timeBlock(block)
                 .build();
         em.persist(tat);
 
-        List<TutorAvailableTime> result = repository.findByDayOfWeekAndTimeBlockId(DayOfWeek.FRIDAY, block.getId());
+        List<TutorAvailableTime> result = repository.findByTimeBlockId(block.getId());
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getTutor().getEmail()).isEqualTo("test2@example.com");

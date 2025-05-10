@@ -37,8 +37,8 @@ public class TutorAvailableTime {
     private TimeBlock timeBlock; // 가능한 시간 블록
 
     // 묵시적으로 해당하지 않는 시간블록은 수업불가 시간임
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week", nullable = false)
-    private DayOfWeek dayOfWeek; // 요일 ( 확장의 여지 )
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "day_of_week", nullable = false)
+//    private DayOfWeek dayOfWeek; // 요일 ( 확장의 여지 )
 }
