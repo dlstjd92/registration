@@ -48,101 +48,108 @@ class TutorServiceTest {
 
     @Test
     void addAvailableTimes_success() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime now = ZonedDateTime.now();
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(now));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(now));
 
         Tutor tutor = new Tutor();
-        tutor.setId(tutorId);
+        tutor.setEmail(tutorEmail);
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, now)).thenReturn(false);
-        when(tutorRepository.findById(tutorId)).thenReturn(Optional.of(tutor));
+        when(tutorRepository.findByEmail(tutorEmail)).thenReturn(Optional.of(tutor));
 
         assertDoesNotThrow(() -> tutorService.addAvailableTimes(dto));
-
         verify(tutorAvailableTimeRepository).save(any(TutorAvailableTime.class));
     }
 
     @Test
     void addAvailableTimes_throws_when_time_exists() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime now = ZonedDateTime.now();
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(now));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(now));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, now)).thenReturn(true);
+        Tutor tutor = new Tutor();
+        tutor.setEmail(tutorEmail);
 
         assertThrows(RuntimeException.class, () -> tutorService.addAvailableTimes(dto));
     }
 
     @Test
     void removeAvailableTimes_success() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime now = ZonedDateTime.now();
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(now));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(now));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, now)).thenReturn(true);
+        Tutor tutor = new Tutor();
+        tutor.setEmail(tutorEmail);
 
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutorEmail, now)).thenReturn(true);
         assertDoesNotThrow(() -> tutorService.removeAvailableTimes(dto));
-
-        verify(tutorAvailableTimeRepository).deleteByTutorIdAndAvailableTime(tutorId, now);
+        verify(tutorAvailableTimeRepository).deleteByTutorEmailAndAvailableTime(tutorEmail, now);
     }
 
     @Test
     void removeAvailableTimes_throws_when_time_not_exists() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime now = ZonedDateTime.now();
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(now));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(now));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, now)).thenReturn(false);
+        Tutor tutor = new Tutor();
+        tutor.setEmail(tutorEmail);
 
         assertThrows(RuntimeException.class, () -> tutorService.removeAvailableTimes(dto));
     }
 
     @Test
     void addAvailableTimes_partialOverlap_throws() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime t1 = ZonedDateTime.now().withMinute(0);
-        ZonedDateTime t2 = t1.plusMinutes(30); // 중복
+        ZonedDateTime t2 = t1.plusMinutes(30);
         ZonedDateTime t3 = t1.plusMinutes(60);
 
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(t1, t2, t3));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(t1, t2, t3));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, t2)).thenReturn(true);
+        Tutor tutor = new Tutor();
+        tutor.setEmail(tutorEmail);
+
+        when(tutorRepository.findByEmail(tutorEmail)).thenReturn(Optional.of(tutor));
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutorEmail, t2)).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> tutorService.addAvailableTimes(dto));
     }
 
     @Test
     void removeAvailableTimes_partialMissing_throws() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         ZonedDateTime t1 = ZonedDateTime.now();
         ZonedDateTime t2 = t1.plusMinutes(30);
 
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(t1, t2));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(t1, t2));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, t1)).thenReturn(true);
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, t2)).thenReturn(false);
+        Tutor tutor = new Tutor();
+        tutor.setEmail(tutorEmail);
+
+        when(tutorRepository.findByEmail(tutorEmail)).thenReturn(Optional.of(tutor));
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutorEmail, t2)).thenReturn(false);
 
         assertThrows(RuntimeException.class, () -> tutorService.removeAvailableTimes(dto));
     }
 
     @Test
     void addAvailableTimes_multipleTimes_success() {
-        Long tutorId = 1L;
+        String tutorEmail = "tutor@example.com";
         Tutor tutor = new Tutor();
-        tutor.setId(tutorId);
+        tutor.setEmail(tutorEmail);
 
         ZonedDateTime t1 = ZonedDateTime.now().withMinute(0);
         ZonedDateTime t2 = t1.plusMinutes(30);
         ZonedDateTime t3 = t1.plusMinutes(60);
 
-        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorId, List.of(t1, t2, t3));
+        TutorAvailableTimeDto dto = new TutorAvailableTimeDto(tutorEmail, List.of(t1, t2, t3));
 
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(anyLong(), any())).thenReturn(false);
-        when(tutorRepository.findById(tutorId)).thenReturn(Optional.of(tutor));
+        when(tutorRepository.findByEmail(tutorEmail)).thenReturn(Optional.of(tutor));
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(eq(tutorEmail), any())).thenReturn(false);
 
         assertDoesNotThrow(() -> tutorService.addAvailableTimes(dto));
-
         verify(tutorAvailableTimeRepository, times(3)).save(any());
     }
 }

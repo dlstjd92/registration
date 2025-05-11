@@ -14,9 +14,9 @@ import java.util.List;
 public interface TutorAvailableTimeRepository extends JpaRepository<TutorAvailableTime, Long> {
 
     // 해당 튜터의 시간이 존재하는지 여부 확인
-    boolean existsByTutorIdAndAvailableTime(Long tutorId, ZonedDateTime availableTime);
+    boolean existsByTutorEmailAndAvailableTime(String tutorEmail, ZonedDateTime availableTime);
 
-    void deleteByTutorIdAndAvailableTime(Long tutorId, ZonedDateTime availableTime);
+    void deleteByTutorEmailAndAvailableTime(String tutorEmail, ZonedDateTime availableTime);
     // 여러 tutorId 목록으로 튜터들을 한 번에 조회
 
     @Query("""

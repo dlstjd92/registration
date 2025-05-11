@@ -50,7 +50,4 @@ public class StudentController {
         return studentService.getReservationsByStudent(email);
     }
 
-
-
-
 }

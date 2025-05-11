@@ -4,6 +4,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public record TutorAvailableTimeDto(
-        Long tutorId,
+        String tutorEmail,
         List<ZonedDateTime> times
 ) {}

@@ -89,19 +89,19 @@ class StudentServiceTest {
         ZonedDateTime start = ZonedDateTime.now();
         int classLength = 2;
 
-        Student student = Student.builder().id(1L).build();
-        Tutor tutor = Tutor.builder().id(2L).email("tutor@test.com").build();
+        Student student = Student.builder().email("student@test.com").build();
+        Tutor tutor = Tutor.builder().email("tutor@test.com").build();
 
         ReservationRequestDto dto = new ReservationRequestDto(
-                1L,
-                2L,
+                "student@test.com",
+                "tutor@test.com",
                 start,
                 classLength
         );
 
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(tutorRepository.findById(2L)).thenReturn(Optional.of(tutor));
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(eq(2L), any())).thenReturn(true);
+        when(studentRepository.findByEmail("student@test.com")).thenReturn(Optional.of(student));
+        when(tutorRepository.findByEmail("tutor@test.com")).thenReturn(Optional.of(tutor));
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(eq(tutor.getEmail()), any())).thenReturn(true);
         when(reservationRepository.existsByTutor_EmailAndStartDate(eq("tutor@test.com"), any())).thenReturn(false);
 
         assertDoesNotThrow(() -> studentService.makeReservation(dto));
@@ -113,19 +113,19 @@ class StudentServiceTest {
         ZonedDateTime start = ZonedDateTime.now();
         int classLength = 2;
 
-        Student student = Student.builder().id(1L).build();
-        Tutor tutor = Tutor.builder().id(2L).email("tutor@test.com").build();
+        Student student = Student.builder().email("student@test.com").build();
+        Tutor tutor = Tutor.builder().email("tutor@test.com").build();
 
         ReservationRequestDto dto = new ReservationRequestDto(
-                1L,
-                2L,
+                "student@test.com",
+                "tutor@test.com",
                 start,
                 classLength
         );
 
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(tutorRepository.findById(2L)).thenReturn(Optional.of(tutor));
-        when(tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(eq(2L), any())).thenReturn(true);
+        when(studentRepository.findByEmail("student@test.com")).thenReturn(Optional.of(student));
+        when(tutorRepository.findByEmail("tutor@test.com")).thenReturn(Optional.of(tutor));
+        when(tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(eq(tutor.getEmail()), any())).thenReturn(true);
         when(reservationRepository.existsByTutor_EmailAndStartDate(eq("tutor@test.com"), any()))
                 .thenReturn(true); // simulate conflict
 
@@ -202,16 +202,27 @@ class StudentServiceTest {
 
     @Test
     void makeReservation_throws_when_classLength_invalid() {
-        ReservationRequestDto dto = new ReservationRequestDto(1L, 1L, ZonedDateTime.now(), 0);
+        ReservationRequestDto dto = new ReservationRequestDto(
+                "student@test.com",
+                "tutor@test.com",
+                ZonedDateTime.now(),
+                0
+        );
+
         assertThrows(RuntimeException.class, () -> studentService.makeReservation(dto));
     }
 
     @Test
     void makeReservation_throws_when_tutor_not_found() {
         ZonedDateTime start = ZonedDateTime.now();
-        ReservationRequestDto dto = new ReservationRequestDto(1L, 999L, start, 1);
+        ReservationRequestDto dto = new ReservationRequestDto(
+                "student@test.com",
+                "notfound@tutor.com",
+                start,
+                1
+        );
 
-        when(tutorRepository.findById(999L)).thenReturn(Optional.empty());
+        when(tutorRepository.findByEmail("notfound@tutor.com")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> studentService.makeReservation(dto));
     }
@@ -219,10 +230,15 @@ class StudentServiceTest {
     @Test
     void makeReservation_throws_when_student_not_found() {
         ZonedDateTime start = ZonedDateTime.now();
-        ReservationRequestDto dto = new ReservationRequestDto(999L, 1L, start, 1);
+        ReservationRequestDto dto = new ReservationRequestDto(
+                "notfound@student.com",
+                "tutor@test.com",
+                start,
+                1
+        );
 
-        when(tutorRepository.findById(1L)).thenReturn(Optional.of(new Tutor()));
-        when(studentRepository.findById(999L)).thenReturn(Optional.empty());
+        when(tutorRepository.findByEmail("tutor@test.com")).thenReturn(Optional.of(new Tutor()));
+        when(studentRepository.findByEmail("notfound@student.com")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> studentService.makeReservation(dto));
     }

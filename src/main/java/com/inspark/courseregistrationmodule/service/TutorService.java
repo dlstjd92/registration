@@ -41,16 +41,16 @@ public class TutorService {
             throw new RuntimeException("availableTutorDto cannot be null");
 
         List<ZonedDateTime> times = tutorAvailableTimeDto.times();
-        Long tutorId = tutorAvailableTimeDto.tutorId();
+        String tutorEmail = tutorAvailableTimeDto.tutorEmail();
 
         for (ZonedDateTime time : times) {
             // 해당 시간대가 존재한다면
-            if (tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, time)) {
+            if (tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutorEmail, time)) {
                 throw new RuntimeException("Trying to add already exist available time(s)" + time);
             }
 
             TutorAvailableTime availableTime = TutorAvailableTime.builder()
-                    .tutor(tutorRepository.findById(tutorId).orElseThrow())
+                    .tutor(tutorRepository.findByEmail(tutorEmail).orElseThrow())
                     .availableTime(time)
                     .build();
             tutorAvailableTimeRepository.save(availableTime);
@@ -63,14 +63,14 @@ public class TutorService {
             throw new RuntimeException("availableTutorDto cannot be null");
 
         List<ZonedDateTime> times = tutorAvailableTimeDto.times();
-        Long tutorId = tutorAvailableTimeDto.tutorId();
+        String tutorEmail = tutorAvailableTimeDto.tutorEmail();
 
         for (ZonedDateTime time : times) {
             // 만약 해당 시간대가 존재하면
-            if (!tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutorId, time)) {
+            if (!tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutorEmail, time)) {
                 throw new RuntimeException("Trying to remove unregistered available time(s)" + time);
             }
-            tutorAvailableTimeRepository.deleteByTutorIdAndAvailableTime(tutorId, time);
+            tutorAvailableTimeRepository.deleteByTutorEmailAndAvailableTime(tutorEmail, time);
         }
     }
 }

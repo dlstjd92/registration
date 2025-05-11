@@ -1,49 +1,161 @@
-# Course Registration Module
+# 수업 예약 시스템 - README
 
-이 시스템은 튜터와 학생 간의 수업 예약을 관리하는 백엔드 시스템입니다.  
-튜터는 수업 가능한 시간대를 설정하고, 학생은 해당 시간대를 선택해 수업을 예약할 수 있습니다.
+## 프로젝트 개요
 
----
+이 프로젝트는 Spring Boot 기반의 학생-튜터 수업 예약 시스템입니다. 학생은 가능한 시간대를 조회하고 수업을 예약할 수 있으며, 튜터는 자신의 가능 시간을 관리할 수 있습니다.
 
-## 1. 주요 기능
+## 주요 기능
 
-- 튜터 등록, 조회, 상세 조회  
-- 튜터의 수업 가능 시간대 설정  
-- 추천 메시지 기반 튜터 프로필 노출  
-- 학생 등록 및 조회  
-- 수업 예약 및 내역 조회  
-- 하루 30분 단위로 구성된 타임슬롯 시스템  
+### 학생 기능
 
----
+* 학생 등록
+* 튜터의 가능 시간과 수업 길이에 따라 가능한 수업 시작 시간 조회
+* 수업 예약 (30분 또는 60분 수업 지원)
+* 수업 그룹별로 내가 예약한 모든 수업 조회
 
-## 2. 기술 스택
+### 튜터 기능
 
-- Spring Boot, JPA (Hibernate), H2 (테스트 DB)  
-- Lombok, Bean Validation (JSR-380), Springdoc (Swagger)  
-- Thymeleaf (간단한 테스트용 프론트 UI)  
+* 튜터 등록
+* 가능 시간 블록 추가 및 삭제 (ZonedDateTime 포맷 사용)
+* 중복되거나 잘못된 시간 블록 유효성 검사
 
----
+### 예약 로직
 
-## 3. 도메인 설계
+* 예약은 30분 단위 블록으로 저장됨
+* 하나의 수업에 여러 예약 블록이 연결되며 lessonGroupId 로 그룹핑됨
+* 중복 예약 방지 및 연속된 블록을 가진 튜터만 필터링하여 제공
 
-### Tutor
+## 사용 기술
 
-- 이름, 이메일, 전공, 자기소개 등의 튜터 프로필을 저장  
-- `@ElementCollection`을 사용해 핵심 경험 및 관심사를 리스트 형태로 저장  
-- 검색 기능은 필요 없으므로 N:M 구조 대신 컬렉션을 사용  
-- 자기소개(`aboutMe`)는 `@Lob`을 통해 대용량 텍스트로 저장  
+* Java 23
+* Spring Boot
+* Spring Data JPA (H2)
+* Lombok
+* Mockito + JUnit 5 (단위 테스트)
+
+## 핵심 엔티티
 
 ### Student
 
-- 수업을 예약하는 학생 정보를 저장하는 도메인  
-- 이름, 이메일, 학교, 프로필 이미지 등 기본 정보를 포함  
-- `email`은 중복 방지를 위해 유니크 제약을 설정  
-- 예약(`Reservation`) 엔티티와 1:N 관계를 가짐  
+* 필드: id, name, email, profileImageUrl
+
+### Tutor
+
+* 필드: id, name, email, university, major, profileImageUrl
 
 ### TutorAvailableTime
 
-- 튜터가 가능한 시간대를 요일 및 30분 단위 시간 슬롯(TimeBlock)으로 설정하는 도메인  
-- `day_of_week + time_block_id + tutor_id` 복합 인덱스를 사용하여 예약 가능 시간 조회 시 성능 최적화  
-- 튜터 기준으로 조회하는 용도의 인덱스도 추가  
+* 필드: id, tutor (외래키), availableTime (ZonedDateTime)
 
----
+### Reservation
+
+* 필드: id, tutor (외래키), student (외래키), startDate, lessonGroupId, classLength
+
+## API 요약
+
+### /student
+
+#### POST /student/add : 학생 등록
+
+```json
+{
+  "name": "학생1",
+  "email": "student@example.com",
+  "profileImageUrl": "http://image.url"
+}
+```
+
+#### GET /student/findTime
+
+```http
+/student/findTime?start=2025-05-10T09:00:00Z&end=2025-05-10T12:00:00Z&classLength=2
+```
+
+수업 가능 시간 조회
+
+#### GET /student/findTutor
+
+```http
+/student/findTutor?time=2025-05-10T10:00:00Z&classLength=2
+```
+
+해당 시간 수업 가능한 튜터 조회
+
+#### POST /student/reservation : 수업 예약
+
+```json
+{
+  "studentEmail": "student@example.com",
+  "tutorEmail": "tutor@example.com",
+  "startDate": "2025-05-10T10:00:00Z",
+  "classLength": 2
+}
+```
+
+#### GET /student/myLesson
+
+```http
+/student/myLesson?email=student@example.com
+```
+
+내가 예약한 수업 목록 조회
+
+### /tutor
+
+#### POST /tutor/add : 튜터 등록
+
+```json
+{
+  "name": "튜터1",
+  "email": "tutor@example.com",
+  "university": "서울대학교",
+  "major": "컴퓨터공학과",
+  "profileImageUrl": "http://image.url"
+}
+```
+
+#### POST /tutor/addAvailableTime : 튜터 가능 시간 추가
+
+```json
+{
+  "tutorEmail": "tutor@example.com",
+  "times": ["2025-05-10T10:00:00Z", "2025-05-10T10:30:00Z"]
+}
+```
+
+#### POST /tutor/removeAvailableTime : 튜터 가능 시간 제거
+
+```json
+{
+  "tutorEmail": "tutor@example.com",
+  "times": ["2025-05-10T10:00:00Z"]
+}
+```
+
+## 테스트
+
+### 단위 테스트
+
+* StudentServiceTest, TutorServiceTest에서 다음을 테스트함:
+
+  * 정상 및 예외 케이스
+  * 중복 시간, 잘못된 입력, 연속 시간 여부 검사
+
+### 리포지토리 테스트
+
+* TutorAvailableTimeRepositoryTest
+
+  * findAvailableTimes(): 예약되지 않은 시간 필터링
+  * findTutorsWithTime(): 연속된 시간 블록 수를 만족하는 튜터만 반환
+
+## 향후 계획
+
+* 학생/튜터 역할별 인증 로직 구현
+* 예약 목록 페이징 처리
+* lessonGroupId 단위로 UI에서 수업 단위 정리
+
+## 실행 방법
+
+```bash
+./gradlew bootRun
+```

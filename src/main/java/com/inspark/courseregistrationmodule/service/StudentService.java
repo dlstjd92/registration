@@ -99,9 +99,9 @@ public class StudentService {
     // 예약하기
     @Transactional
     public void makeReservation(ReservationRequestDto dto) {
-        Tutor tutor = tutorRepository.findById(dto.tutorId())
+        Tutor tutor = tutorRepository.findByEmail(dto.tutorEmail())
                 .orElseThrow(() -> new RuntimeException("튜터가 존재하지 않습니다."));
-        Student student = studentRepository.findById(dto.studentId())
+        Student student = studentRepository.findByEmail(dto.studentEmail())
                 .orElseThrow(() -> new RuntimeException("학생이 존재하지 않습니다."));
 
         ZonedDateTime start = dto.startDate();
@@ -121,7 +121,7 @@ public class StudentService {
     private void checkTutorsAvailableTime(int classLength, ZonedDateTime start, Tutor tutor) {
         for (int i = 0; i < classLength; i++) {
             ZonedDateTime blockTime = start.plusMinutes(i * TIME_BLOCK_MINUTES);
-            boolean isAvailable = tutorAvailableTimeRepository.existsByTutorIdAndAvailableTime(tutor.getId(), blockTime);
+            boolean isAvailable = tutorAvailableTimeRepository.existsByTutorEmailAndAvailableTime(tutor.getEmail(), blockTime);
             if (!isAvailable) {
                 throw new RuntimeException("튜터의 가능한 시간이 아닙니다: " + blockTime);
             }
