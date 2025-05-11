@@ -71,7 +71,7 @@
 /student/findTime?start=2025-05-10T09:00:00Z&end=2025-05-10T12:00:00Z&classLength=2
 ```
 
-수업 가능 시간 조회
+기간 & 수업 길이로 현재 수업 가능한 시간대를 조회
 
 #### GET /student/findTutor
 
@@ -79,7 +79,7 @@
 /student/findTutor?time=2025-05-10T10:00:00Z&classLength=2
 ```
 
-해당 시간 수업 가능한 튜터 조회
+시간대 & 수업길이로 수업 가능한 튜터 조회
 
 #### POST /student/reservation : 수업 예약
 
@@ -91,6 +91,7 @@
   "classLength": 2
 }
 ```
+시간대, 수업길이, 튜터로 새로운 수업 신청
 
 #### GET /student/myLesson
 
@@ -98,7 +99,7 @@
 /student/myLesson?email=student@example.com
 ```
 
-내가 예약한 수업 목록 조회
+학생이 예약한 수업 목록 조회
 
 ### /tutor
 
@@ -147,12 +148,6 @@
 
   * findAvailableTimes(): 예약되지 않은 시간 필터링
   * findTutorsWithTime(): 연속된 시간 블록 수를 만족하는 튜터만 반환
-
-## 향후 계획
-
-* 학생/튜터 역할별 인증 로직 구현
-* 예약 목록 페이징 처리
-* lessonGroupId 단위로 UI에서 수업 단위 정리
 
 ## 실행 방법
 
