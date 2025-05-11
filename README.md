@@ -167,7 +167,7 @@ open build/reports/tests/test/index.html  # macOS
 본 프로젝트는 Swagger UI를 통해 API 명세를 시각적으로 확인하고 바로 테스트할 수 있도록 구성되어 있습니다.
 
 아래 방법 혹은, AWS EC2를 이용하여 구동중인 서버가 있습니다.
-http://13.125.238.177:8080/swagger-ui/index.html#/
+주소는 메일에 첨부하였습니다.
 
 * 스팟 인스턴스 사용하여 갑작스럽게 종료될 수 있습니다.
 
