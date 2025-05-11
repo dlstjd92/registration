@@ -77,9 +77,8 @@ public class StudentService {
     }
 
     private boolean isContiguous(int classLength, List<ZonedDateTime> sortedAvailableTimes, int i) {
-        long minuteDiff = Duration.between(sortedAvailableTimes.get(i + classLength - 1), sortedAvailableTimes.get(i)).toMinutes();
-        boolean isContiguous = minuteDiff == TIME_BLOCK_MINUTES * (classLength - 1);
-        return isContiguous;
+        long minuteDiff = Duration.between(sortedAvailableTimes.get(i), sortedAvailableTimes.get(i + classLength - 1)).toMinutes();
+        return minuteDiff == TIME_BLOCK_MINUTES * (classLength - 1);
     }
 
     public List<Tutor> findTutorWithTimeAndClassLength(ZonedDateTime time, int classLength){
@@ -100,13 +99,13 @@ public class StudentService {
     // 예약하기
     @Transactional
     public void makeReservation(ReservationRequestDto dto) {
-        Tutor tutor = tutorRepository.findById(dto.getTutorId())
+        Tutor tutor = tutorRepository.findById(dto.tutorId())
                 .orElseThrow(() -> new RuntimeException("튜터가 존재하지 않습니다."));
-        Student student = studentRepository.findById(dto.getStudentId())
+        Student student = studentRepository.findById(dto.studentId())
                 .orElseThrow(() -> new RuntimeException("학생이 존재하지 않습니다."));
 
-        ZonedDateTime start = dto.getStartDate();
-        int classLength = dto.getClassLength();
+        ZonedDateTime start = dto.startDate();
+        int classLength = dto.classLength();
 
         if (classLength < 1 || classLength > MAX_CLASS_LENGTH) {
             throw new RuntimeException("ClassLength must be between 1 and " + MAX_CLASS_LENGTH);

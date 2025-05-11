@@ -1,6 +1,5 @@
 package com.inspark.courseregistrationmodule.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +32,6 @@ public class Student {
 
     private String profileImageUrl; //프로필 이미지
 
-//    @JsonIgnore
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 }

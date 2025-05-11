@@ -1,6 +1,5 @@
 package com.inspark.courseregistrationmodule.controller;
 
-
 import com.inspark.courseregistrationmodule.domain.Tutor;
 import com.inspark.courseregistrationmodule.dto.TutorAvailableTimeDto;
 import com.inspark.courseregistrationmodule.service.TutorService;
@@ -32,7 +31,6 @@ public class TutorController {
     public void removeAvailableTime(@RequestBody TutorAvailableTimeDto tutorAvailableTimeDto) {
         tutorService.removeAvailableTimes(tutorAvailableTimeDto);
     }
-
 
 
 }

@@ -1,7 +1,5 @@
 package com.inspark.courseregistrationmodule.controller;
 
-
-import com.inspark.courseregistrationmodule.domain.Reservation;
 import com.inspark.courseregistrationmodule.domain.Student;
 import com.inspark.courseregistrationmodule.domain.Tutor;
 import com.inspark.courseregistrationmodule.dto.ReservationRequestDto;

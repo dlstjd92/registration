@@ -4,8 +4,6 @@ package com.inspark.courseregistrationmodule.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "tutors")
 @Getter
@@ -20,14 +18,14 @@ public class Tutor {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // 이름
+    private String name;
 
     @Column(nullable = false, unique = true)
-    private String email; // 이메일
+    private String email;
 
-    private String university; // 대학
-    private String major; // 전공
-    private String profileImageUrl; // 프로필이미지 링크
+    private String university;
+    private String major;
+    private String profileImageUrl;
 
 
 }

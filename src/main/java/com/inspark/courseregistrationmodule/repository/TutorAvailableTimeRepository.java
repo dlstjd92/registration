@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface TutorAvailableTimeRepository extends JpaRepository<TutorAvailableTime, Long> {
 
-    // TODO 새로 추가한 메소드들 테스트 만들어야함
     // 해당 튜터의 시간이 존재하는지 여부 확인
     boolean existsByTutorIdAndAvailableTime(Long tutorId, ZonedDateTime availableTime);
 

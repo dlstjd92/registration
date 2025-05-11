@@ -3,7 +3,6 @@ package com.inspark.courseregistrationmodule.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 
 @Entity
