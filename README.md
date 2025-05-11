@@ -67,7 +67,7 @@
 
 #### GET /student/findTime
 
-```http
+```
 /student/findTime?start=2025-05-10T09:00:00Z&end=2025-05-10T12:00:00Z&classLength=2
 ```
 
@@ -75,7 +75,7 @@
 
 #### GET /student/findTutor
 
-```http
+```
 /student/findTutor?time=2025-05-10T10:00:00Z&classLength=2
 ```
 
