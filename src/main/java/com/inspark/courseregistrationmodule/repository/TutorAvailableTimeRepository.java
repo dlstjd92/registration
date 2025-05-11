@@ -1,5 +1,6 @@
 package com.inspark.courseregistrationmodule.repository;
 
+import com.inspark.courseregistrationmodule.domain.Tutor;
 import com.inspark.courseregistrationmodule.domain.TutorAvailableTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,8 +31,27 @@ public interface TutorAvailableTimeRepository extends JpaRepository<TutorAvailab
       )
     order by t.availableTime asc
     """)
-    List<ZonedDateTime> findAvailableTime(
+    List<ZonedDateTime> findAvailableTimes(
             @Param("startTime") ZonedDateTime startTime,
             @Param("endTime") ZonedDateTime endTime
+    );
+
+    @Query("""
+SELECT t
+FROM TutorAvailableTime a
+JOIN a.tutor t
+WHERE a.availableTime BETWEEN :startTime AND :endClassTime
+  AND a.availableTime NOT IN (
+      SELECT r.startDate
+      FROM Reservation r
+      WHERE r.startDate BETWEEN :startTime AND :endClassTime
+  )
+GROUP BY t.id
+HAVING COUNT(a) = :classLength
+""")
+    List<Tutor> findTutorsWithTime(
+            @Param("startTime") ZonedDateTime startTime,
+            @Param("endClassTime") ZonedDateTime endClassTime,
+            @Param(("classLength")) int classLength
     );
 }

@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(
-        name = "students",
-        indexes = { // 예약테이블 검색 부스팅용
-
+@Table(name = "reservation", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"tutor_id", "start_date"})
+},
+        indexes = {
+                @Index(name = "idx_start_date", columnList = "start_date"),
+                @Index(name = "idx_tutor_id", columnList = "tutor_id")
         }
 )
 @Getter
@@ -33,5 +35,9 @@ public class Reservation {
     private Tutor tutor;
 
     private ZonedDateTime startDate;
+
+    private String lessonGroupId;
+
+    private int classLength;
 
 }
