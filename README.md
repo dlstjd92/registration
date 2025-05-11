@@ -159,3 +159,89 @@
 ```bash
 ./gradlew bootRun
 ```
+
+## Swagger 기반 API 테스트 방법
+
+본 프로젝트는 Swagger UI를 통해 API 명세를 시각적으로 확인하고 바로 테스트할 수 있도록 구성되어 있습니다.
+
+### 접근 방법
+
+* 서버 실행 후 브라우저에서 다음 주소로 접속:
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+### 제공 기능
+
+* 각 API의 요청/응답 구조 명세 확인
+* 직접 `Try it out` 버튼을 눌러 API 요청 실행
+* 응답 코드 및 결과 확인 (ex. 200 OK, 400 Bad Request 등)
+
+### 사용 예시
+
+1. `POST /student/add` 예시
+   ```
+   {
+   "name":"이름",
+   "email":"이메일@이메일",
+   "profileImageUrl":"사진"
+   }
+   ```
+
+2. GET /student/findTime - 가능한 수업 시간 조회
+```
+   /student/findTime?start=2025-05-10T09:00:00Z&end=2025-05-10T12:00:00Z&classLength=2
+```
+3. /student/findTutor - 가능한 튜터 조회
+```
+   /student/findTutor?time=2025-05-10T10:00:00Z&classLength=2
+```
+4. POST /student/reservation - 수업 예약
+
+```
+   {
+   "studentEmail": "이메일@이메일",
+   "tutorEmail": "이메일@이메일",
+   "startDate": "2025-05-10T10:00:00Z",
+   "classLength": 2
+   }
+```
+classLength 1당 30분을 의미.
+
+5. GET /student/myLesson - 내가 예약한 수업 조회
+```
+   /student/myLesson?email=student1@example.com
+```
+6. POST /tutor/add - 튜터 등록
+```
+{
+"name": "이름",
+"email": "이메일@이메일",
+"university": "학교",
+"major": "전공",
+"profileImageUrl": "사진주소"
+}
+```
+7. POST /tutor/addAvailableTime - 튜터 가능 시간 추가
+```
+{
+"tutorEmail": "이메일@이메일",
+"times": ["2025-05-10T10:00:00Z", "2025-05-10T10:30:00Z"]
+}
+```
+8. POST /tutor/removeAvailableTime - 튜터 가능 시간 제거
+```
+{
+"tutorEmail": "이메일@이메일",
+"times": ["2025-05-10T10:00:00Z"]
+}
+```
+---
+1.  엔드포인트 클릭
+2. `Try it out` 버튼 클릭
+3. JSON 형식의 요청 본문 작성
+4. `Execute` 버튼 클릭하여 요청 실행
+5. 하단의 응답 결과(상태 코드, 응답 메시지 등) 확인
+
+
