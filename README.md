@@ -95,7 +95,7 @@
 
 #### GET /student/myLesson
 
-```http
+```
 /student/myLesson?email=student@example.com
 ```
 
