@@ -109,8 +109,8 @@
 {
   "name": "튜터1",
   "email": "tutor@example.com",
-  "university": "서울대학교",
-  "major": "컴퓨터공학과",
+  "university": "학교",
+  "major": "전공",
   "profileImageUrl": "http://image.url"
 }
 ```
@@ -151,11 +151,11 @@
 
 ## 실행 방법
 
-서버 실행 코드
+서버 실행 스크립트
 ```bash
 ./gradlew bootRun
 ```
-테스트 실행 코드
+테스트 실행 스크립트
 ```bash
 ./gradlew test
 # 테스트 후 리포트
