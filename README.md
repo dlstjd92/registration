@@ -151,8 +151,15 @@
 
 ## 실행 방법
 
+서버 실행 코드
 ```bash
 ./gradlew bootRun
+```
+테스트 실행 코드
+```bash
+./gradlew test
+# 테스트 후 리포트
+open build/reports/tests/test/index.html  # macOS
 ```
 
 ## Swagger 기반 API 테스트 방법
