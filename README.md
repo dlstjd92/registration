@@ -196,6 +196,7 @@ http://localhost:8080/swagger-ui/index.html
    }
    ```
 
+
 2. GET /student/findTime - 가능한 수업 시간 조회
 ```
    /student/findTime?start=2025-05-10T09:00:00Z&end=2025-05-10T12:00:00Z&classLength=2
@@ -204,12 +205,14 @@ start = 시작시간
 end = 끝시간
 classLength = 수업길이(1은 30분을 의미)
 
+
 3. /student/findTutor - 가능한 튜터 조회
 ```
    /student/findTutor?time=2025-05-10T10:00:00Z&classLength=2
 ```
 time = 탐색할 시간대
 classLength = 수업길이
+
 
 4. POST /student/reservation - 수업 예약
 
@@ -223,11 +226,13 @@ classLength = 수업길이
 ```
 classLength 1당 30분을 의미.
 
+
 5. GET /student/myLesson - 내가 예약한 수업 조회
 ```
    /student/myLesson?email=student1@example.com
 ```
 email = 학생의 email
+
 
 6. POST /tutor/add - 튜터 등록
 ```
@@ -238,6 +243,8 @@ email = 학생의 email
 "major": "전공",
 "profileImageUrl": "사진주소"
 }
+
+
 ```
 7. POST /tutor/addAvailableTime - 튜터 가능 시간 추가
 ```
@@ -246,6 +253,8 @@ email = 학생의 email
 "times": ["2025-05-10T10:00:00Z", "2025-05-10T10:30:00Z"]
 }
 ```
+
+
 8. POST /tutor/removeAvailableTime - 튜터 가능 시간 제거
 ```
 {
